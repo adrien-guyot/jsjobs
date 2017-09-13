@@ -53,7 +53,7 @@ export class JobAddFormComponent implements OnInit {
       company: '',
       city: '',
       zipcode: 35,
-      decription: '',
+      description: '',
       contract: '',
       salary: null,
       currency: '',
