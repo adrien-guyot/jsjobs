@@ -6,7 +6,12 @@ let data = require('./jobs');                   // permet de récupérer le cont
 console.log('jobs : ', data.jobs);
 
 app.use(bodyParser.json());                     // app.use permet de passer des middlewares, ici on passe le middleware bodyParser.json
-                                                // ainsi quand une requête entre, elle subira un traitement qui consistera à parser les données envoyées
+                                             // ainsi quand une requête entre, elle subira un traitement qui consistera à parser les données envoyées
+
+app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    next();
+})
 
 const api = express.Router();                   // on créé un router appelé api, à l'aide d'express.Router
 
