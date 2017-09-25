@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { JobService } from './../services/job.service';
 
 @Component({
   selector: 'ag-job-details',
@@ -7,9 +9,36 @@ import { Component, OnInit } from '@angular/core';
 })
 export class JobDetailsComponent implements OnInit {
 
-  constructor() { }
+  jobDetails = null;
+  error = null;
+  errorMessage = '';
+
+  constructor(private JobService: JobService, private activatedRoute: ActivatedRoute) { }
 
   ngOnInit() {
+    const id = this.activatedRoute.snapshot.params.id;
+    this.JobService.getJob(id)
+                   .subscribe(
+                     data => {
+                       this.handleServerResponse(data);
+                     },
+                     error => {
+                       this.handleError(error);
+                     }
+                   )
+  }
+
+  handleServerResponse(response){
+    if (response.success){
+      this.jobDetails = response.job;
+    } else {
+      this.errorMessage = response.message;
+    }
+  }
+
+  handleError(error){
+    console.log('handleError : ', error.statusText);
+    this.error = error;
   }
 
 }
