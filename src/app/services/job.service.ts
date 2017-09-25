@@ -11,6 +11,7 @@ export class JobService {
   initialJobs = [];
   jobs = [];
   jobsSubject = new Subject();
+  searchResultSubject = new Subject();
   BASE_URL = 'http://localhost:4201/';
 
   constructor(private http: Http) { }
@@ -33,14 +34,15 @@ export class JobService {
       });
   }
 
-  getJob(id){
+  getJob(id) {
     return this.http.get(this.BASE_URL + `api/jobs/${id}`)
-                    .map(res => res.json());
+      .map(res => res.json());
   }
 
   searchJob(criteria) {
     console.log(criteria);
     return this.http.get(`${this.BASE_URL}api/search/${criteria.term}/${criteria.place}`)
-                    .map (res => res.json());
+      .map(res => res.json())
+      .do(res => this.searchResultSubject.next(res));
   }
 }
