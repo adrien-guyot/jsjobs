@@ -36,6 +36,18 @@ api.post('/jobs', (req, res) => {
     res.json(job);
 })
 
+api.get('/search/:term/:place?', (req, res) => {
+    const term = req.params.term.toLowerCase().trim();
+    let place = req.params.place;
+ 
+    let jobs = getAllJobs().filter(j => (j.description.toLowerCase().includes(term) || j.title.toLowerCase().includes(term) ));
+    if (place){
+        place = place.toLowerCase().trim();
+        jobs = jobs.filter(j => (j.city.toLowerCase().includes(place)));
+    }
+    res.json({success: true, jobs});
+});
+
 api.get('/jobs/:id', (req, res) => {
     const id = parseInt(req.params.id, 10);     // on parse l'id à récupérer pour parcourir l'api
     const job = getAllJobs().filter(j => j.id === id);
