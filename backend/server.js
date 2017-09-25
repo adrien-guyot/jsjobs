@@ -36,6 +36,16 @@ api.post('/jobs', (req, res) => {
     res.json(job);
 })
 
+api.get('/jobs/:id', (req, res) => {
+    const id = parseInt(req.params.id, 10);     // on parse l'id à récupérer pour parcourir l'api
+    const job = getAllJobs().filter(j => j.id === id);
+    if (job.length === 1) {
+        res.json({success: true, job: job[0]});
+    } else {
+        res.json({success: false, message: `Pas de job ayant pour id ${id}`});
+    }
+} )
+
 app.use('/api', api);                           // permet de préfixer le chemin ainsi : localhost:4201/api/jobs
 
 const port=4201;                                // on déclare le port sur lequel on va écouter
