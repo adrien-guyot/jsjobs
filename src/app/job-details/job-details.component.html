@@ -10,7 +10,7 @@
       <hr>
       publié le {{ jobDetails.publishdate | toShortDate }} <br>
       actualisé le {{ jobDetails.lastupdate | toShortDate }} <br>
-      salaire : {{ jobDetails.salary }} {{ jobDetails.currency }} <br>
+      salaire : {{ jobDetails.salary }} {{ jobDetails.currency | toMoneySymbol }} <br>
       <hr>
       <b>Descriptif du poste</b>
       <div>
@@ -19,7 +19,7 @@
       <hr>
       <div>
         date de démarrage : {{ jobDetails.startdate | toShortDate }}<br>
-        status : {{ jobDetails.status }}
+        status : {{ jobDetails.status }}<br>
         déplacements : {{ jobDetails.area }}
       </div>
     </div>
