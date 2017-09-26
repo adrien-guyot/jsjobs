@@ -6,6 +6,7 @@ import { RouterModule } from '@angular/router';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 
 import { JobService } from './services/job.service';
+import { AuthService } from './services/auth.service';
 
 import { AppComponent } from './app.component';
 import { SearchComponent } from './search/search.component';
@@ -27,6 +28,7 @@ const routes = [
   { path: 'jobs', component: JobListComponent },
   { path: 'about', component: AboutComponent },
   { path: 'login', component: AuthenticationComponent },
+  { path: 'logout', component: AuthenticationComponent },
   { path: 'register', component: AuthenticationComponent }
 ]
 
@@ -52,7 +54,7 @@ const routes = [
     HttpModule,
     RouterModule.forRoot(routes)
   ],
-  providers: [JobService],
+  providers: [JobService, AuthService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
