@@ -7,6 +7,9 @@ import { AuthService } from './../services/auth.service';
   styleUrls: ['./authentication.component.css']
 })
 export class AuthenticationComponent implements OnInit {
+  jbbData = null;
+  isAuthenticated = false;
+  welcomeMessage = '';
 
   constructor(private _authService: AuthService) { }
 
@@ -16,13 +19,17 @@ export class AuthenticationComponent implements OnInit {
   login(formData){
     this._authService.login(formData)
                      .subscribe(
-                       data => this.handleLoginSuccess,         // création d'une méthode en cas de succès de l'appel au service
-                       error => this.handleLoginFailure          // création d'une méthode en cas d'échec de l'appel au service
+                       data => this.handleLoginSuccess(data),         // création d'une méthode en cas de succès de l'appel au service
+                       error => this.handleLoginFailure(error)          // création d'une méthode en cas d'échec de l'appel au service
                      );
   }
 
   handleLoginSuccess(data) {
     console.log('success', data);
+    this.jbbData = data;
+    this.isAuthenticated = true;
+    this.welcomeMessage = 'Bienvenue';
+    localStorage.setItem('jbb-data', JSON.stringify(data));
   }
 
   handleLoginFailure(error) {
