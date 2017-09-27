@@ -14,21 +14,27 @@ export class AuthenticationComponent implements OnInit {
   constructor(private _authService: AuthService) { }
 
   ngOnInit() {
+    if (localStorage.getItem('jbb-data')) {
+      this.refreshFlags();
+    }
+  }
+  refreshFlags() {
+    this.isAuthenticated = true;
+    this.welcomeMessage = 'Bienvenue';
   }
 
-  login(formData){
+  login(formData) {
     this._authService.login(formData)
-                     .subscribe(
-                       data => this.handleLoginSuccess(data),         // création d'une méthode en cas de succès de l'appel au service
-                       error => this.handleLoginFailure(error)          // création d'une méthode en cas d'échec de l'appel au service
-                     );
+      .subscribe(
+      data => this.handleLoginSuccess(data),         // création d'une méthode en cas de succès de l'appel au service
+      error => this.handleLoginFailure(error)          // création d'une méthode en cas d'échec de l'appel au service
+      );
   }
 
   handleLoginSuccess(data) {
     console.log('success', data);
     this.jbbData = data;
-    this.isAuthenticated = true;
-    this.welcomeMessage = 'Bienvenue';
+    this.refreshFlags();
     localStorage.setItem('jbb-data', JSON.stringify(data));
   }
 
