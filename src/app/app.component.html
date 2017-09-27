@@ -9,7 +9,7 @@
         <li><a href="#" routerLink="/about">A propos</a></li>
         <li><a href="#" routerLink="/login" *ngIf="!_authService.userIsLoggedIn()">Connexion</a></li>
         <li><a href="#" routerLink="/logout" (click)="_authService.logout()" *ngIf="_authService.userIsLoggedIn()">Déconnexion</a></li>
-        <!-- <li><a href="#" routerLink="/register">Créer un compte</a></li> -->
+        <li><a href="#" routerLink="/register"  *ngIf="!_authService.userIsLoggedIn()">Créer un compte</a></li>
       </ul>
     </div>
   </div>

@@ -14,7 +14,7 @@ export class AuthenticationComponent implements OnInit {
   constructor(private _authService: AuthService) { }
 
   ngOnInit() {
-    if (localStorage.getItem('jbb-data')) {
+    if (this._authService.userIsLoggedIn()) {
       this.refreshFlags();
     }
   }
