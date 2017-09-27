@@ -12,4 +12,13 @@ export class AuthService {
     return this.http.post(`${this.BASE_URL}/login`, credentials)
                     .map(res => res.json());
   }
+
+  userIsLoggedIn(){
+    return localStorage.getItem('jbb-data');
+  }
+
+  logout(){
+    localStorage.removeItem('jbb-data');
+  }
+
 }
