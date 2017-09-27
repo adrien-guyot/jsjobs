@@ -8,21 +8,23 @@ export class AuthService {
 
   constructor(private http: Http) { }
 
-  login(credentials){
+  login(credentials) {
     return this.http.post(`${this.BASE_URL}/login`, credentials)
-                    .map(res => res.json());
+      .map(res => res.json());
   }
 
-  userIsLoggedIn(){
+  userIsLoggedIn() {
     return localStorage.getItem('jbb-data');
   }
 
-  logout(){
+  logout() {
     localStorage.removeItem('jbb-data');
   }
 
-  register(credentials){
-    console.log('register', credentials);
+  register(credentials) {
+    // console.log('register', credentials);
+    return this.http.post(`${this.BASE_URL}/register`, credentials)
+      .map(res => res.json());
   }
 
 }

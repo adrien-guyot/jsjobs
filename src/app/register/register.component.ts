@@ -13,8 +13,21 @@ export class RegisterComponent implements OnInit {
   ngOnInit() {
   }
 
-  register(formData){
-    this._authService.register(formData);
+  register(formData) {
+    return this._authService.register(formData)
+      .subscribe(
+      data => this.handleRegisterSuccess(data),
+      error => this.handleRegisterFailure(error)
+      );
+  }
+
+  handleRegisterSuccess(data) {
+    console.log('success', data);
+    localStorage.setItem('jbb-data', JSON.stringify(data));
+  }
+
+  handleRegisterFailure(error) {
+    console.error('failure', error);
   }
 
 }
