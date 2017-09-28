@@ -21,6 +21,7 @@ import { ToMoneySymbolPipe } from './pipes/to-money-symbol.pipe';
 import { SearchResultComponent } from './search-result/search-result.component';
 import { AuthenticationComponent } from './authentication/authentication.component';
 import { RegisterComponent } from './register/register.component';
+import { UserProfileComponent } from './user-profile/user-profile.component';
 
 const routes = [
   { path: '', component: HomeComponent },
@@ -30,7 +31,8 @@ const routes = [
   { path: 'about', component: AboutComponent },
   { path: 'login', component: AuthenticationComponent },
   { path: 'logout', component: AuthenticationComponent },
-  { path: 'register', component: RegisterComponent }
+  { path: 'register', component: RegisterComponent },
+  { path: 'profile', component: UserProfileComponent }
 ]
 
 @NgModule({
@@ -47,7 +49,8 @@ const routes = [
     ToMoneySymbolPipe,
     SearchResultComponent,
     AuthenticationComponent,
-    RegisterComponent
+    RegisterComponent,
+    UserProfileComponent
   ],
   imports: [
     BrowserModule,

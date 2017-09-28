@@ -23,7 +23,7 @@ export class RegisterComponent implements OnInit {
 
   handleRegisterSuccess(data) {
     console.log('success', data);
-    localStorage.setItem('jbb-data', JSON.stringify(data));
+    // localStorage.setItem('jbb-data', JSON.stringify(data));
   }
 
   handleRegisterFailure(error) {
