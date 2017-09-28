@@ -6,8 +6,7 @@ let data = require('./jobs');                   // permet de récupérer le cont
 let initialJobs = data.jobs;
 let addedJobs = [];
 
-users = [];
-const fakeUser = {id: 1, email: 'tu@test.fr', nickname:'Tutu', password: 'aze'};
+users = [{id: 1, email: 'tu@test.fr', nickname:'Tutu', password: 'aze'}];
 const secret = 'qsdjS12ozehdoIJ123DJOZJLDSCqsdeffdg123ER56SDFZedhWXojqshduzaohduihqsDAqsdq';
 const jwt = require('jsonwebtoken');
 
@@ -28,19 +27,21 @@ const api = express.Router();                   // on créé un router appelé a
 const auth = express.Router();
 
 auth.post('/login', (req, res) => {
-    if (req.body){                                                              // on teste si on a bien reçu les données du form
-        const email = req.body.email.toLocaleLowerCase();                             // on récupère l'email et le password
+    if (req.body){                                                           // on teste si on a bien reçu les données du form
+        const email = req.body.email.toLocaleLowerCase();                    // on récupère l'email et le password
         const password = req.body.password.toLocaleLowerCase();
-        if (email === fakeUser.email && password === fakeUser.password){        // on compare les données au fakeUser
-            delete req.body.password;
-            //res.json({success: true, data: req.body});                          // si cond ok, on retourne un flag à true avec la req
+        const index = users.findIndex(user => user.email === email );        // grâce à la méthode findIndex, on recherche dans notre tableau
+                                                // de users qu'un enregistrement match avec l'email qui a été posté
+
+        if (index>-1 && users[index].password === password){                 // on teste si l'index trouvé est viable et que les passwords côtés client & serveur matchent
+            //res.json({success: true, data: req.body});                     // si cond ok, on retourne un flag à true avec la req avec un status "utilisateur non authentifié"
             const token = jwt.sign({ iss: 'http://localhost:4201', role:'admin', email: req.body.email }, secret);
             res.json({success: true, token: token});
-        } else {
-            res.json({success: false, message: 'identifiants incorrects'});     // si cond nok, on retourne un flag à false avec err msg
+        } else {                                                             // si cond nok, on retourne un flag à false avec err msg avec un status "erreur serveur"
+            res.status(401).json({success: false, message: 'identifiants incorrects'});     
         }
     } else {
-        res.json({success: false, message: 'données manquantes'});
+        res.status(500).json({success: false, message: 'données manquantes'});
     }
 })
 
