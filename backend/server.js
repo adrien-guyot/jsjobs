@@ -6,7 +6,10 @@ let data = require('./jobs');                   // permet de récupérer le cont
 let initialJobs = data.jobs;
 let addedJobs = [];
 
-users = [{id: 1, email: 'tu@test.fr', nickname:'Tutu', password: 'aze'}];
+users = [
+    { id: 1, email: 'tu@test.fr', nickname: 'Tutu', password: 'aze', role: 'admin' },
+    { id: 2, email: 'tu2@test.fr', nickname: 'Tutu2', password: 'qsd', role: 'user' }
+];
 const secret = 'qsdjS12ozehdoIJ123DJOZJLDSCqsdeffdg123ER56SDFZedhWXojqshduzaohduihqsDAqsdq';
 const jwt = require('jsonwebtoken');
 
@@ -15,7 +18,7 @@ const getAllJobs = () => {
 }
 
 app.use(bodyParser.json());                     // app.use permet de passer des middlewares, ici on passe le middleware bodyParser.json
-                                                // ainsi quand une requête entre, elle subira un traitement qui consistera à parser les données envoyées
+                                // ainsi quand une requête entre, elle subira un traitement qui consistera à parser les données envoyées
 
 app.use((req, res, next) => {
     res.header('Access-Control-Allow-Origin', '*');  // permet au serveur d'accepter de répondre au client Angular malgré leur différence de n° de port
@@ -27,34 +30,39 @@ const api = express.Router();                   // on créé un router appelé a
 const auth = express.Router();
 
 auth.post('/login', (req, res) => {
-    if (req.body){                                                           // on teste si on a bien reçu les données du form
-        const email = req.body.email.toLocaleLowerCase();                    // on récupère l'email et le password
+    if (req.body) {                                                         // on teste si on a bien reçu les données du form
+        const email = req.body.email.toLocaleLowerCase();                   // on récupère l'email et le password
         const password = req.body.password.toLocaleLowerCase();
-        const index = users.findIndex(user => user.email === email );        // grâce à la méthode findIndex, on recherche dans notre tableau
-                                                // de users qu'un enregistrement match avec l'email qui a été posté
+        const index = users.findIndex(user => user.email === email);        // grâce à la méthode findIndex, on recherche dans notre tableau
+                                                                        // de users qu'un enregistrement match avec l'email qui a été posté
 
-        if (index>-1 && users[index].password === password){                 // on teste si l'index trouvé est viable et que les passwords côtés client & serveur matchent
-            //res.json({success: true, data: req.body});                     // si cond ok, on retourne un flag à true avec la req avec un status "utilisateur non authentifié"
-            const token = jwt.sign({ iss: 'http://localhost:4201', role:'admin', email: req.body.email }, secret);
-            res.json({success: true, token: token});
-        } else {                                                             // si cond nok, on retourne un flag à false avec err msg avec un status "erreur serveur"
-            res.status(401).json({success: false, message: 'identifiants incorrects'});     
+        if (index > -1 && users[index].password === password) {             // on teste si l'index trouvé est viable et que les passwords côtés client & serveur matchent
+            let user = users[index];                                        // on récupère les données de l'utilisateur 
+            let token = '';                                                 // on initialise notre token à vide
+            if (user.email === 'tu@test.fr') {                                // on teste si l'email de l'utilisateur correspond à celui de l'admin   
+                token = jwt.sign({ iss: 'http://localhost:4201', role: 'admin', email: req.body.email }, secret);  // on renvoie le token spé admin
+            } else {                                                        // sinon on renvoie le token spé user
+                token = jwt.sign({ iss: 'http://localhost:4201', role: 'user', email: req.body.email }, secret);
+            }
+            res.json({ success: true, token: token });
+        } else {  // si le match des passwords est nok, on retourne un flag à false avec le token et un status "utilisateur non authentifié"
+            res.status(401).json({ success: false, message: 'identifiants incorrects' });
         }
-    } else {
-        res.status(500).json({success: false, message: 'données manquantes'});
+    } else {      // si on a pas reçu les données du form, on retourne un flag à false avec err msg avec un status "erreur serveur"
+        res.status(500).json({ success: false, message: 'données manquantes' });
     }
 })
 
 auth.post('/register', (req, res) => {
     console.log('req.body', req.body);
-    if(req.body){
+    if (req.body) {
         const email = req.body.email.toLocaleLowerCase().trim();
         const password = req.body.password.toLocaleLowerCase().trim();
         const nickname = req.body.nickname.trim();
-        users = [{id: Date.now(), email: email, password: password}, ...users];
-        res.json({success: true, users: users});
-    }else{
-        res.json({success:false, message: "la création a échoué"});
+        users = [{ id: Date.now(), email: email, password: password }, ...users];
+        res.json({ success: true, users: users });
+    } else {
+        res.json({ success: false, message: "la création a échoué" });
     }
 })
 
@@ -74,29 +82,29 @@ api.post('/jobs', (req, res) => {               // Gestion du post concernant l'
 api.get('/search/:term/:place?', (req, res) => {        // Gestion du get concernant la recherche de jobs
     const term = req.params.term.toLowerCase().trim();
     let place = req.params.place;
- 
-    let jobs = getAllJobs().filter(j => (j.description.toLowerCase().includes(term) || j.title.toLowerCase().includes(term) ));
-    if (place){
+
+    let jobs = getAllJobs().filter(j => (j.description.toLowerCase().includes(term) || j.title.toLowerCase().includes(term)));
+    if (place) {
         place = place.toLowerCase().trim();
         jobs = jobs.filter(j => (j.city.toLowerCase().includes(place)));
     }
-    res.json({success: true, jobs});
+    res.json({ success: true, jobs });
 });
 
 api.get('/jobs/:id', (req, res) => {
     const id = parseInt(req.params.id, 10);     // on parse l'id à récupérer pour parcourir l'api
     const job = getAllJobs().filter(j => j.id === id);
     if (job.length === 1) {
-        res.json({success: true, job: job[0]});
+        res.json({ success: true, job: job[0] });
     } else {
-        res.json({success: false, message: `Pas de job ayant pour id ${id}`});
+        res.json({ success: false, message: `Pas de job ayant pour id ${id}` });
     }
-} )
+})
 
 app.use('/api', api);                           // permet de préfixer le chemin ainsi : localhost:4201/api/jobs
 app.use('/auth', auth);                         // permet de préfixer le chemin ainsi : localhost:4201/auth/
 
-const port=4201;                                // on déclare le port sur lequel on va écouter
+const port = 4201;                                // on déclare le port sur lequel on va écouter
 
 app.listen(port, () => {                        // on demande à notre app d'écouter sur le port en question
     console.log(`listening on port ${port}`);   // on indique en callback le port écouté pour le futur dev qui réprendra notre code ^^
