@@ -4,6 +4,7 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/do';
 import { Subject } from 'rxjs/Rx';
 import { Observable } from 'rxjs/Observable';
+import { AuthService } from './auth.service';
 
 @Injectable()
 export class JobService {
@@ -14,24 +15,24 @@ export class JobService {
   searchResultSubject = new Subject();
   BASE_URL = 'http://localhost:4201/';
 
-  constructor(private http: Http) { }
+  constructor(private http: Http, private _authService: AuthService) { }
 
   getJobs() {
     return this.http.get(this.BASE_URL + 'api/jobs')
       .map(res => res.json());
   }
 
-  addJob(jobData) {
+  addJob(jobData, token) {
     console.log('inside addJob');
     jobData.id = Date.now();
-    // this.jobs = [jobData, ...this.jobs];
-    // return this.jobsSubject.next(jobData);
 
-    return this.http.post(this.BASE_URL + 'api/jobs', jobData)
-      .map(res => {
-        console.log(res);
-        this.jobsSubject.next(jobData);
-      });
+    const requestOptions = this._authService.addAuthorizationHeader(token);
+
+    return this.http.post(this.BASE_URL + 'api/jobs', jobData, requestOptions)
+                    .map(res => {
+                      console.log(res);
+                      this.jobsSubject.next(jobData);
+                    });
   }
 
   getJob(id) {

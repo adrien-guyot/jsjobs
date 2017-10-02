@@ -22,7 +22,7 @@ app.use(bodyParser.json());                     // app.use permet de passer des 
 
 app.use((req, res, next) => {
     res.header('Access-Control-Allow-Origin', '*');  // permet au serveur d'accepter de répondre au client Angular malgré leur différence de n° de port
-    res.header('Access-Control-Allow-Headers', 'Content-Type');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
     next();
 })
 

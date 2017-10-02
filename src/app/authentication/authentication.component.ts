@@ -35,7 +35,7 @@ export class AuthenticationComponent implements OnInit {
     console.log('success', data);
     this.jbbData = data;
     this.refreshFlags();
-    localStorage.setItem('jbb-data', JSON.stringify(data));
+    localStorage.setItem('jbb-token', JSON.stringify(data));
   }
 
   handleLoginFailure(error) {
