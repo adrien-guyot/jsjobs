@@ -15,7 +15,9 @@ export class AuthService {
   }
 
   userIsLoggedIn() {
-    return localStorage.getItem('jbb-data');
+    /* En JS, linstruction !! convertit ce qui suit en booléen, ici on aura donc true ou false en fonction
+    de la présence ou non d'une valeur pour jbb-data */
+    return !!localStorage.getItem('jbb-data');
   }
 
   logout() {

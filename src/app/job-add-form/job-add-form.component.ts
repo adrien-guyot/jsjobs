@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
+
 import { JobService } from './../services/job.service';
+import { AuthService } from './../services/auth.service';
 
 @Component({
   selector: 'ag-job-add-form',
@@ -10,6 +12,7 @@ import { JobService } from './../services/job.service';
 export class JobAddFormComponent implements OnInit {
 
   form: FormGroup;
+  userIsLoggedIn = false; // flag pour identifier si user est loggé ou pas
 
   contractTypes = [
     { id: 1, name: 'Stage', value: 'intership' },
@@ -44,7 +47,7 @@ export class JobAddFormComponent implements OnInit {
     { id: 4, name: 'déplacements internationaux', value: 'international' }
   ];
 
-  constructor(private formBuilder: FormBuilder, private _jobService: JobService) { }
+  constructor(private formBuilder: FormBuilder, private _jobService: JobService, private _authService: AuthService) { }
 
   ngOnInit() {
     this.form = this.formBuilder.group({
@@ -65,11 +68,21 @@ export class JobAddFormComponent implements OnInit {
       publishdate: new Date(),
       lastupdate: new Date()
     });
+
+    this.checkUserIsLoggedIn(); // vérification à l'intilisation que le user est loggé ou pas
+  }
+
+  checkUserIsLoggedIn() {
+    if (this._authService.userIsLoggedIn()) {
+      this.userIsLoggedIn = true;
+    }
   }
 
   createJob(jobData) {
     this._jobService.addJob(jobData).subscribe();
     this.form.reset();
   }
+
+
 
 }
