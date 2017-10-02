@@ -26,8 +26,10 @@ export class JobService {
     console.log('inside addJob');
     jobData.id = Date.now();
 
+    // appel des RequestOptions depuis _authService
     const requestOptions = this._authService.addAuthorizationHeader(token);
 
+    // post(URL, corps du form, options)
     return this.http.post(this.BASE_URL + 'api/jobs', jobData, requestOptions)
                     .map(res => {
                       console.log(res);

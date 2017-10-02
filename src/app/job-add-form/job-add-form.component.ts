@@ -79,7 +79,10 @@ export class JobAddFormComponent implements OnInit {
   }
 
   createJob(jobData) {
+    // Récupération du token
     const token = JSON.parse(localStorage.getItem('jbb-token')).token;
+    // on passe à la méthode addJob les données receuillies du formulaire mais aussi le token
+    // cette méthode va ensuite appeler authService pour qu'on lui retourne les RequestOptions
     this._jobService.addJob(jobData, token).subscribe();
     this.form.reset();
   }

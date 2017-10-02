@@ -31,7 +31,7 @@ export class AuthService {
       .map(res => res.json());
   }
 
-  addAuthorizationHeader(token){               // Pour créer un header, importer Headers et RequestOptions depuis @angular/http
+  addAuthorizationHeader(token){               // ATTENTION pr créer un header, importer Headers et RequestOptions depuis @angular/http
     // 'Autorization': 'Bearer azeazeazeazeaze'
     const authorizationHeader = new Headers({  // qd on a des headers à envoyer, on créé une nouvelle instance de headers
       'Authorization': 'Bearer ' + token        // on passe en arguments ce que l'on souhaite ajouter

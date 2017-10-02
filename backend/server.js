@@ -71,20 +71,29 @@ api.get('/jobs', (req, res) => {                // le router dispose d'une méth
     res.json(getAllJobs());
 });
 
+// Création d'un MiddleWare pour imposer une connexion aux personnes qui veulent faire un post sur /jobs
 const checkUserToken = (req, res, next) => {
     //Authorization: Bearer azeazeazeazeaze
-    if(!req.header){     // on test la présence d'une header authorization dans la requête qui est renvoyée
+    if(!req.header('authorization')){     // on test la présence d'une header authorization dans la requête qui est renvoyée
         // s'il n'y a pas de header authorization, on renvoie un statut invalide avec un message d'info
         return req.status(401).json({success: false, message: "Le header d'authentification est manquant"});
     }
 
     const authorizationParts = req.header('authorization').split(' ');
-    let token = authorizationParts[1]; // on slipt authorization pour récupérer azeazeaze... qui est le token
-    const decodedToken = jwt.verify(token, secret); // le serveur vérifie ainsi le jwt avec le tokem ET le secret
-    console.log('decodedToken', decodedToken);
-    next();
+    let token = authorizationParts[1]; // on split authorization pour récupérer azeazeaze... qui est le token
+    console.log ('token', token);
+    // le serveur vérifie ainsi le jwt avec le tokem ET le secret
+    jwt.verify(token, secret, (err, decodedToken) => {
+        if (err) {
+            console.log(err);
+            return res.status(401).json({ success: false, message: "Token non valide"});
+        } else {
+            console.log('decodedToken', decodedToken);
+            next(); // l'utilisateur a fournit un token valide donc le next est valable
+        }
+    }); 
 
-};
+}; 
 
 /* Gestion du post concernant l'ajout d'un job, en ajoutant un middleware en deuxième paramètre de la route, cela aura pour conséquence
 de vérifier qu'il y ait bien un header*/
