@@ -39,10 +39,11 @@ auth.post('/login', (req, res) => {
         if (index > -1 && users[index].password === password) {             // on teste si l'index trouvé est viable et que les passwords côtés client & serveur matchent
             let user = users[index];                                        // on récupère les données de l'utilisateur 
             let token = '';                                                 // on initialise notre token à vide
-            if (user.email === 'tu@test.fr') {                                // on teste si l'email de l'utilisateur correspond à celui de l'admin   
-                token = jwt.sign({ iss: 'http://localhost:4201', role: 'admin', email: req.body.email }, secret);  // on renvoie le token spé admin
+            if (user.email === 'tu@test.fr') {                              // on teste si l'email de l'utilisateur correspond à celui de l'admin   
+            // on renvoie le token spé admin    
+            token = jwt.sign({ iss: 'http://localhost:4201', role: 'admin', email: req.body.email, nickname: user.nickname }, secret);  
             } else {                                                        // sinon on renvoie le token spé user
-                token = jwt.sign({ iss: 'http://localhost:4201', role: 'user', email: req.body.email }, secret);
+                token = jwt.sign({ iss: 'http://localhost:4201', role: 'user', email: req.body.email, nickname: user.nickname }, secret);
             }
             res.json({ success: true, token: token });
         } else {  // si le match des passwords est nok, on retourne un flag à false avec le token et un status "utilisateur non authentifié"
