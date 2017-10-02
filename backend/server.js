@@ -71,7 +71,24 @@ api.get('/jobs', (req, res) => {                // le router dispose d'une méth
     res.json(getAllJobs());
 });
 
-api.post('/jobs', (req, res) => {               // Gestion du post concernant l'ajout d'un job
+const checkUserToken = (req, res, next) => {
+    //Authorization: Bearer azeazeazeazeaze
+    if(!req.header){     // on test la présence d'une header authorization dans la requête qui est renvoyée
+        // s'il n'y a pas de header authorization, on renvoie un statut invalide avec un message d'info
+        return req.status(401).json({success: false, message: "Le header d'authentification est manquant"});
+    }
+
+    const authorizationParts = req.header('authorization').split(' ');
+    let token = authorizationParts[1]; // on slipt authorization pour récupérer azeazeaze... qui est le token
+    const decodedToken = jwt.verify(token, secret); // le serveur vérifie ainsi le jwt avec le tokem ET le secret
+    console.log('decodedToken', decodedToken);
+    next();
+
+};
+
+/* Gestion du post concernant l'ajout d'un job, en ajoutant un middleware en deuxième paramètre de la route, cela aura pour conséquence
+de vérifier qu'il y ait bien un header*/
+api.post('/jobs', checkUserToken, (req, res) => {               
     console.log('************************');
     const job = req.body;
     addedJobs = [job, ...addedJobs];
