@@ -1,5 +1,6 @@
 import { AuthService } from './../services/auth.service';
 import { Component, OnInit } from '@angular/core';
+import { JobService } from './../services/job.service';
 
 @Component({
   selector: 'ag-user-profile',
@@ -10,8 +11,9 @@ export class UserProfileComponent implements OnInit {
 
   decodedToken = null;
   isAdmin = false;
+  userEmail = '';
 
-  constructor(private _authService: AuthService) { }
+  constructor(private _authService: AuthService, private _jobService: JobService) { }
 
   ngOnInit() {
     if (this._authService.userIsLoggedIn()) {
@@ -23,5 +25,15 @@ export class UserProfileComponent implements OnInit {
         this.isAdmin = true;                  // si ok, on passe le flag à true pour afficher une vue spé admin coté template
       }
     }
+    this.userEmail = this.decodedToken.email;
+    this.loadJobs(this.userEmail);
+  }
+
+  loadJobs(userEmail){
+    this._jobService.getJobsByUserEmail(userEmail)
+                    .subscribe(
+                      data => console.log(data),
+                      err => console.error(err)
+                    )
   }
 }

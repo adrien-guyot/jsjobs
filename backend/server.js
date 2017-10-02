@@ -72,6 +72,12 @@ api.get('/jobs', (req, res) => {                // le router dispose d'une méth
     res.json(getAllJobs());
 });
 
+api.get('/jobs/:email', (req, res) => {
+    const email = req.params.email;
+    const jobs = getAllJobs().filter(job => job.email === email);
+    res.json({success: true, jobs: jobs});
+})
+
 // Création d'un MiddleWare pour imposer une connexion aux personnes qui veulent faire un post sur /jobs
 const checkUserToken = (req, res, next) => {
     //Authorization: Bearer azeazeazeazeaze
