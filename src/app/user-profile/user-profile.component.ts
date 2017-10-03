@@ -26,14 +26,31 @@ export class UserProfileComponent implements OnInit {
       }
     }
     this.userEmail = this.decodedToken.email;
-    this.loadJobs(this.userEmail);
+    // admin  doit voir tous les annonces
+    if (this.isAdmin) {
+      this.loadJobsWithoutFilter();
+    } else {
+      this.loadJobs(this.userEmail);
+    }
   }
 
-  loadJobs(userEmail){
+  loadJobs(userEmail) {
     this._jobService.getJobsByUserEmail(userEmail)
                     .subscribe(
-                      data => console.log(data),
-                      err => console.error(err)
+                    data => console.log(data),
+                    err => console.error(err)
                     )
+  }
+
+  loadJobsWithoutFilter() {
+    this._jobService.getJobs()
+                    .subscribe(
+                    data => this.displayJobs(data),
+                    err => console.error(err)
+                    )
+  }
+
+  displayJobs(jobs) {
+    console.log(jobs);
   }
 }
