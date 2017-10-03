@@ -20,6 +20,10 @@
   <div *ngFor="let job of jobs">
     <strong>{{ job.title }}</strong>
     - publiée il y a {{ job.publishdate | daysAgo }}
-    - mise à jour il y a {{ job.lastupdate | daysAgo }}
+    - mise à jour il y a {{ job.lastupdate | daysAgo }}  
+    <div>
+      {{ job.description | truncate: 10:'... Lire plus' }}
+    </div>
   </div>
+
 </div>
