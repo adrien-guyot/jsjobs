@@ -10,6 +10,7 @@ users = [
     { id: 1, email: 'tu@test.fr', nickname: 'Tutu', password: 'aze', role: 'admin' },
     { id: 2, email: 'tu2@test.fr', nickname: 'Tutu2', password: 'qsd', role: 'user' }
 ];
+
 const secret = 'qsdjS12ozehdoIJ123DJOZJLDSCqsdeffdg123ER56SDFZedhWXojqshduzaohduihqsDAqsdq';
 const jwt = require('jsonwebtoken');
 
@@ -60,7 +61,7 @@ auth.post('/register', (req, res) => {
         const email = req.body.email.toLocaleLowerCase().trim();
         const password = req.body.password.toLocaleLowerCase().trim();
         const nickname = req.body.nickname.trim();
-        users = [{ id: Date.now(), email: email, password: password }, ...users];
+        users = [{ id: Date.now(), email: email, nickname: nickname, password: password }, ...users];
         res.json({ success: true, users: users });
     } else {
         res.json({ success: false, message: "la création a échoué" });

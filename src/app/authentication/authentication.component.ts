@@ -18,6 +18,7 @@ export class AuthenticationComponent implements OnInit {
       this.refreshFlags();
     }
   }
+
   refreshFlags() {
     this.isAuthenticated = true;
     this.welcomeMessage = 'Bienvenue';
